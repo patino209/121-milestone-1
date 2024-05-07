@@ -1,6 +1,6 @@
 class Document:
     personal_docId: int
-    docId: int
+    docId: int = 0
     token_frequency: dict
 
     def __init__(self, token_frequency) -> None:
