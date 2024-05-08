@@ -1,10 +1,12 @@
 from bs4 import BeautifulSoup as bs
 import os
 import json
+import sys
 from tokenizer import computeWordFrequencies
-from document import Document
+from posting import Posting
 
 root = 'DEV'
+docId = 0
 
 def get_word_frequencies(words: list):
     word_freq = computeWordFrequencies(words)
@@ -17,6 +19,7 @@ def get_word_frequencies(words: list):
 def main():
     # a map with a token as a key and a list of its corresponding postings
     inverted_index = dict()
+    global docId
 
     # Iterate through every file in DEV
     for subdir, dirs, files in os.walk(root):
@@ -25,6 +28,8 @@ def main():
 
             # Open each file and parse content
             with open(document, "r") as doc:
+                docId += 1
+                
                 doc_json = json.load(doc)
                 content = doc_json['content']
 
@@ -35,18 +40,21 @@ def main():
 
                 word_frequencies = get_word_frequencies(words)
 
-                # Create a document object to store information about the document
-                doc_obj = Document(word_frequencies)
-                print(doc_obj.getDocId())
-
+                for key, value in word_frequencies.items():
+                    if key not in inverted_index.keys():
+                        inverted_index[key] = []
+                    # Append the posting to the inverted index
+                    inverted_index[key].append(Posting(docId, value))
                 
-
-
-
-
-    
+    return inverted_index
 
 
 
 if __name__ == "__main__":
-    main()
+    with open("report.txt", "w") as report:
+        inv_index = main()
+        count_docs = docId
+        count_unique = len(inv_index.keys())
+        report.write("Number of indexed documents: " + str(count_docs) + "\n")
+        report.write("Number of unique words: " + str(count_unique) + "\n")
+        report.write("The size of the inverted index: " + str(sys.getsizeof(inv_index) / 1000) + " KB.")
