@@ -2,6 +2,8 @@ from bs4 import BeautifulSoup as bs
 import os
 import json
 import sys
+import nltk
+nltk.download('punkt')
 from tokenizer import computeWordFrequencies
 from posting import Posting
 
@@ -14,6 +16,9 @@ def get_word_frequencies(words: list):
         word_freq[k] += v
 
     return word_freq
+
+def to_json(obj):
+        return json.dumps(obj, default=lambda obj: obj.__dict__)
 
 
 def main():
@@ -35,7 +40,7 @@ def main():
 
                 soup = bs(content, "html.parser")
                 text = soup.get_text()
-                words = text.split()
+                words = nltk.tokenize.word_tokenize(text)
                 words = [word.lower() for word in words if word.isalnum()]
 
                 word_frequencies = get_word_frequencies(words)
@@ -51,10 +56,13 @@ def main():
 
 
 if __name__ == "__main__":
-    with open("report.txt", "w") as report:
-        inv_index = main()
-        count_docs = docId
-        count_unique = len(inv_index.keys())
-        report.write("Number of indexed documents: " + str(count_docs) + "\n")
-        report.write("Number of unique words: " + str(count_unique) + "\n")
-        report.write("The size of the inverted index: " + str(sys.getsizeof(inv_index) / 1000) + " KB.")
+    with open ("index.txt", "w") as index:
+        with open("report.txt", "w") as report:
+            inv_index = main()
+            count_docs = docId
+            count_unique = len(inv_index.keys())
+            report.write("Number of indexed documents: " + str(count_docs) + "\n")
+            report.write("Number of unique words: " + str(count_unique) + "\n")
+            report.write("The size of the inverted index: " + str(sys.getsizeof(inv_index) / 1000) + " KB.")
+
+            index.write(to_json(inv_index))

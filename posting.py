@@ -1,3 +1,5 @@
+import json
+
 class Posting:
     docId: int
     score: int
