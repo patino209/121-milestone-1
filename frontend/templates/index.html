@@ -7,11 +7,12 @@
     <title>Search Page</title>
 </head>
 <body>
-
-<div class="search-container">
-    <input type="text" id="query" class="search-input" placeholder="Enter your search...">
-    <button id="search-button">Search</button>
-</div>
+<form method="POST">
+    <div class="search-container">
+        <input type="text" id="query" name="search-input" class="search-input" placeholder="Enter your search...">
+        <button type="submit" name="search-button">Search</button>
+    </div>
+</form>
 
 </body>
 <script src="/static/javascript/script.js"></script>
