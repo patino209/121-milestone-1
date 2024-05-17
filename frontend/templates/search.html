@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/search.css') }}">
+</head>
+<body>
+    <div class="search-results">
+        <h1>Search results for: {{query}}</h1>
+
+            {% for link in links %}
+            <div class="results">
+                <h2 class="url"><a href="{{link}}">{{link}}</a></h2>
+            </div>
+            {% endfor %}
+    </div>
+</body>
+</html>

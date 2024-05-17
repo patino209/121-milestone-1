@@ -4,7 +4,6 @@ import json
 import sys
 import nltk
 from collections import defaultdict
-nltk.download('punkt')
 from tokenizer import computeWordFrequencies
 from posting import Posting
 
@@ -65,6 +64,7 @@ def main():
 
 
 if __name__ == "__main__":
+    nltk.download('punkt')
     with open ("document_map.txt", "w") as document_map_file:
         with open ("index.txt", "w") as index:
             with open("report.txt", "w") as report:

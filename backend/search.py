@@ -1,9 +1,9 @@
 import json
-import os
-
 
 data = None
+doc_map = None
 
+# ANDs two lists of document ids
 def merge_ids(ids1: list, ids2: list):
     token1_index = 0
     token2_index = 0
@@ -22,23 +22,15 @@ def merge_ids(ids1: list, ids2: list):
 
     return merged_did
 
-
+# Retrieve all docs in which a token appeared
 def retrieve_ids(token: str):
     dids = []
     for info in data[token]:
         dids.append(info["docId"])
     return dids
 
+# Perform AND boolean search on list of tokens
 def and_search(tokens: list):
-    global data
-    with open(os.getcwd() + "/index.txt", "r") as file:
-        data = file.read()
-    data = json.loads(data)
-    # Retrieve the dictionary that maps docIds to their respective urls
-    with open(os.getcwd() + "/document_map.txt", "r") as file:
-        doc_map = file.read()
-    doc_map = json.loads(doc_map)
-
     all_dids = []
     # Merge all docIds using the AND boolean operator
     for index, token in enumerate(tokens):
@@ -55,7 +47,21 @@ def and_search(tokens: list):
 
     return urls[:5]
 
-if __name__ == "__main__":
+# Loads the index and document maps into memory
+def load_index():
+    global data
+    global doc_map
 
+    # Load index from disk to memory
+    with open("backend/index.txt", "r") as file:
+        data = file.read()
+        data = json.loads(data)
+
+    # Load the dictionary that maps docIds to their respective urls in memory
+    with open("backend/document_map.txt", "r") as file:
+        doc_map = file.read()
+        doc_map = json.loads(doc_map)
+
+if __name__ == "__main__":
     urls = and_search(["cristina", "lopes"])
     print(urls)
